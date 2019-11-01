@@ -1,14 +1,14 @@
+/* global window document */
 // @flow
-
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import './app.scss';
 
-function RegexBar({ setRegex }) {
+function RegexBar({ setRegex, regex }) {
   const ref = useRef();
   const changeHandler = useCallback((e) => {
     const { textContent } = e.currentTarget;
-    const regex = textContent.replace('\\', '\\');
-    setRegex(regex);
+    const regexVal = textContent.replace('\\', '\\');
+    setRegex(regexVal);
   }, [setRegex]);
 
   useEffect(() => {
@@ -17,8 +17,25 @@ function RegexBar({ setRegex }) {
     }
   }, [ref]);
 
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.innerText = regex;
+    }
+  }, [regex]);
+
+  const focusHandler = useCallback(() => {
+    const selection = window.getSelection();
+    const range = document.createRange();
+    selection.removeAllRanges();
+    range.selectNodeContents(ref.current);
+    range.collapse(false);
+    selection.addRange(range);
+    ref.current.focus();
+  }, [ref]);
+
   return (
-    <div className="search-bar" onClick={() => ref.current.focus()}>
+    // eslint-disable-next-line
+    <div className="search-bar" onClick={focusHandler}>
       <span>/</span>
       <div contentEditable ref={ref} className="search-input" onInput={changeHandler} type="text" />
       <span>/</span>
@@ -79,22 +96,22 @@ function CheckBox({ label, val, setVal, values }: Props) {
 
   return (
     <label onChange={() => setVal(val)}>
-      <input type="checkbox" checked={exists} />
+      <input type="checkbox" checked={exists} onChange={() => setVal(val)} />
       {label}
     </label>
   );
 }
 
-function HelperBar({ flags, setFlags }) {
+function HelperBar({ flags, setFlags, setRegex }) {
   return (
     <div className="helper-bar">
       <div className="fixed-helpers">
-        <RadioButton label="Digits Only" val="d" />
-        <RadioButton label="None Digits Only" val="d" />
-        <RadioButton label="Words Only" val="d" />
-        <RadioButton label="None Words Only" val="d" />
-        <RadioButton label="Space Character Only" val="d" />
-        <RadioButton label="None Space Character Only" val="d" />
+        <RadioButton label="Digits Only" val="\d" setVal={setRegex} />
+        <RadioButton label="None Digits Only" val="\D" setVal={setRegex} />
+        <RadioButton label="Words Only" val="\w" setVal={setRegex} />
+        <RadioButton label="None Words Only" val="\W" setVal={setRegex} />
+        <RadioButton label="Space Character Only" val="\s" setVal={setRegex} />
+        <RadioButton label="None Space Character Only" val="\S" setVal={setRegex} />
       </div>
       <div className="global-helpers">
         <CheckBox values={flags} setVal={setFlags} label="Global" val="g" />
@@ -105,10 +122,39 @@ function HelperBar({ flags, setFlags }) {
 }
 
 
+function Buttons({ regex, flags }) {
+  const getRegex = useCallback(() => {
+    const el = document.getElementById('regexVal');
+    el.style.display = 'block';
+    el.value = `/${el.value}/${flags.join('')}`;
+    el.select();
+    document.execCommand('copy');
+    el.style.display = 'none';
+  }, [flags]);
+
+  const getRegexJs= useCallback(() => {
+    const el = document.getElementById('regexVal');
+    el.style.display = 'block';
+    el.value = `new RegExp('${el.value}', '${flags.join('')}')`;
+    el.select();
+    document.execCommand('copy');
+    el.style.display = 'none';
+  }, [flags]);
+
+  return (
+    <div>
+      <button type="button" onClick={getRegex}>Get Regex</button>
+      <button type="button" onClick={getRegexJs}>Get Regex js</button>
+    </div>
+  );
+}
+
+
 function App() {
   const [sentence, setSentence] = useState('');
   const [regex, setRegex] = useState('');
   const [flags, setFlags] = useState([]);
+  const [char, setChar] = useState('');
 
   const handleFlags = useCallback((v) => {
     const exists = flags.includes(v);
@@ -121,13 +167,14 @@ function App() {
     }
   }, [setFlags, flags]);
 
-
   return (
     <div className="container">
-      <RegexBar setRegex={setRegex} />
-      <HelperBar flags={flags} setFlags={handleFlags} />
+      <RegexBar setRegex={setRegex} regex={char} />
+      <HelperBar flags={flags} setFlags={handleFlags} setRegex={setChar} />
       <SentenceInput setSentence={setSentence} />
       <Result flags={flags} regex={regex} sentence={sentence} />
+      <Buttons flags={flags} regex={regex} />
+      <input type="text" style={{ display: 'none' }} id="regexVal" />
     </div>
   );
 }
