@@ -2,29 +2,37 @@
 // @flow
 import React, { useCallback } from 'react';
 
-function Buttons({ regex, flags }) {
+type Props = {
+  regex: String,
+  flags: Array,
+  char: String,
+}
+
+function Buttons({ regex, flags, char }: Props) {
   const getRegex = useCallback(() => {
     const el = document.getElementById('regexVal');
     el.style.display = 'block';
-    el.value = `/${el.value}/${flags.join('')}`;
+    const regVal = regex || char;
+    el.value = `/${regVal}/${flags.join('')}`;
     el.select();
     document.execCommand('copy');
     el.style.display = 'none';
-  }, [flags]);
+  }, [flags, regex, char]);
 
   const getRegexJs = useCallback(() => {
     const el = document.getElementById('regexVal');
     el.style.display = 'block';
-    el.value = `new RegExp('${el.value}', '${flags.join('')}')`;
+    const regVal = regex || char.replace('\\', '\\\\');
+    el.value = `new RegExp('${regVal}', '${flags.join('')}')`;
     el.select();
     document.execCommand('copy');
     el.style.display = 'none';
-  }, [flags]);
+  }, [flags, regex, char]);
 
   return (
     <div>
       <button type="button" onClick={getRegex}>Get Regex</button>
-      <button type="button" onClick={getRegexJs}>Get Regex js</button>
+      <button type="button" onClick={getRegexJs}>Get Regex JS Expression</button>
     </div>
   );
 }

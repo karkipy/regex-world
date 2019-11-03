@@ -14,7 +14,7 @@ function CheckBox({ label, val, setVal, values }: Props) {
   return (
     // eslint-disable-next-line
     <label onChange={() => setVal(val)}>
-      <input type="checkbox" checked={exists} onChange={() => setVal(val)} />
+      <input type="checkbox" checked={exists} />
       {label}
     </label>
   );

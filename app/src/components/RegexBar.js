@@ -5,9 +5,10 @@ import React, { useRef, useCallback, useEffect } from 'react';
 type Props = {
   setRegex: () => void,
   regex: String,
+  flags: Array,
 }
 
-function RegexBar({ setRegex, regex }: Props) {
+function RegexBar({ setRegex, regex, flags }: Props) {
   const ref = useRef();
   const changeHandler = useCallback((e) => {
     const { textContent } = e.currentTarget;
@@ -42,7 +43,7 @@ function RegexBar({ setRegex, regex }: Props) {
     <div className="search-bar" onClick={focusHandler}>
       <span>/</span>
       <div contentEditable ref={ref} className="search-input" onInput={changeHandler} type="text" />
-      <span>/</span>
+      <span>/{flags.join('')}</span>
     </div>
   );
 }

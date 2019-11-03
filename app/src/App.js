@@ -24,12 +24,12 @@ function App() {
 
   return (
     <div className="container">
-      <RegexBar setRegex={setRegex} regex={char} />
+      <RegexBar setRegex={setRegex} regex={char} flags={flags} />
       <HelperBar flags={flags} setFlags={handleFlags} setRegex={setChar} />
       <SentenceInput setSentence={setSentence} />
-      <Result flags={flags} regex={regex} sentence={sentence} />
-      <Buttons flags={flags} regex={regex} />
-      <input type="text" style={{ display: 'none' }} id="regexVal" />
+      <Result char={char} flags={flags} regex={regex} sentence={sentence} />
+      <Buttons flags={flags} regex={regex} char={char} />
+      <input type="text" style={{ height: '0px', width: '1px', display: 'none' }} id="regexVal" />
     </div>
   );
 }

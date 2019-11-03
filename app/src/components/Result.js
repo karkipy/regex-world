@@ -7,10 +7,10 @@ type Props = {
   flags: Array,
 }
 
-function Result({ regex, sentence, flags }: Props) {
+function Result({ regex, sentence, flags, char }: Props) {
   let value = null;
   try {
-    const regexp = new RegExp(regex, flags.join(''));
+    const regexp = new RegExp(regex || char, flags.join(''));
     value = sentence.match(regexp);
     if (value.index >= 0 && value.input !== '') {
       return (
