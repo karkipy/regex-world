@@ -20,8 +20,6 @@ jobs:
     - name: npm install, build, and test
       run: |
         npm ci
-        git config --global user.email "aashish.y2z@gmail.com"
-        git config --global user.name "Aashish Karki"
         npm run build --if-present
         npm test
         npm run deploy
