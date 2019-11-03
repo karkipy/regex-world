@@ -1,7 +1,11 @@
 A sandbox environment to test regex.
 
+link :
+
+http://bit.ly/326DY2N
 
 
+Regex cheatsheet refered from : https://dev.to/catherinecodes/a-regex-cheatsheet-for-all-those-regex-haters-and-lovers--2cj1
 
 ```javascript
 
