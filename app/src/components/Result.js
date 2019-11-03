@@ -14,7 +14,7 @@ function Result({ regex, sentence, flags, char }: Props) {
     value = sentence.match(regexp);
     if (value.index >= 0 && value.input !== '') {
       return (
-        <div className="result">
+        <div className="result" data-placeholder="Result">
           {value} index: {value.index}
         </div>
       );

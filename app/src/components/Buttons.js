@@ -1,6 +1,7 @@
-/* global window document */
+/* global document */
 // @flow
 import React, { useCallback } from 'react';
+import './buttons.scss';
 
 type Props = {
   regex: String,
@@ -30,7 +31,7 @@ function Buttons({ regex, flags, char }: Props) {
   }, [flags, regex, char]);
 
   return (
-    <div>
+    <div className="button-container">
       <button type="button" onClick={getRegex}>Get Regex</button>
       <button type="button" onClick={getRegexJs}>Get Regex JS Expression</button>
     </div>
